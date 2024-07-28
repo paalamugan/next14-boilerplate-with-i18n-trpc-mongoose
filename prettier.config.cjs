@@ -1,14 +1,3 @@
-/** @type {import('prettier-plugin-embed').PrettierPluginEmbedOptions} */
-const prettierPluginEmbedConfig = {
-  embeddedSqlIdentifiers: ['sql'],
-};
-
-/** @type {import('prettier-plugin-sql').SqlBaseOptions} */
-const prettierPluginSqlConfig = {
-  language: 'postgresql',
-  keywordCase: 'upper',
-};
-
 /** @type {import('prettier').Config & import('prettier-plugin-tailwindcss').PluginOptions} */
 const config = {
   tabWidth: 2,
@@ -21,14 +10,8 @@ const config = {
   bracketSameLine: false,
   arrowParens: 'avoid',
   printWidth: 100,
-  plugins: ['prettier-plugin-tailwindcss', 'prettier-plugin-sql', 'prettier-plugin-embed'],
+  plugins: ['prettier-plugin-tailwindcss'],
   endOfLine: 'auto',
 };
 
-const defaultConfig = {
-  ...config,
-  ...prettierPluginEmbedConfig,
-  ...prettierPluginSqlConfig,
-};
-
-module.exports = defaultConfig;
+module.exports = config;
