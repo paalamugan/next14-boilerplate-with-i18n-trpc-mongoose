@@ -1,4 +1,4 @@
-import { siteConfig } from '@/helpers/app.config';
+import { siteConfig } from '@/next-helpers/app.config';
 
 import { getI18nPath } from './helpers';
 

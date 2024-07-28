@@ -7,10 +7,10 @@ import { getLocale, unstable_setRequestLocale } from 'next-intl/server';
 import NextTopLoader from 'nextjs-toploader';
 import type { FC, PropsWithChildren } from 'react';
 
-import { siteConfig } from '@/helpers/app.config';
-import { allLocaleCodes, availableLocalesMap, defaultLocale } from '@/helpers/next.locales';
 import BaseLayout from '@/layouts/BaseLayout';
 import { INTER, OPEN_SANS } from '@/lib/next-fonts';
+import { siteConfig } from '@/next-helpers/app.config';
+import { allLocaleCodes, availableLocalesMap, defaultLocale } from '@/next-helpers/next.locales';
 import { Providers } from '@/providers/providers';
 
 const fontClasses = cn(INTER.variable, OPEN_SANS.variable);

@@ -6,14 +6,14 @@ import { withSentryConfig } from '@sentry/nextjs';
 import createJiti from 'jiti';
 import withNextIntl from 'next-intl/plugin';
 
-import { BASE_PATH, ENABLE_STATIC_EXPORT } from './src/helpers/next.constants.js';
-import { redirects, rewrites } from './src/helpers/next.rewrites.js';
+import { BASE_PATH, ENABLE_STATIC_EXPORT } from './src/next-helpers/next.constants.js';
+import { redirects, rewrites } from './src/next-helpers/next.rewrites.js';
 import {
   SENTRY_DSN,
   SENTRY_ENABLE,
   SENTRY_EXTENSIONS,
   SENTRY_TUNNEL,
-} from './src/helpers/sentry.constants.js';
+} from './src/next-helpers/sentry.constants.js';
 
 const jiti = createJiti(fileURLToPath(import.meta.url));
 

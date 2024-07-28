@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
-import { siteConfig } from '@/helpers/app.config';
+import { siteConfig } from '@/next-helpers/app.config';
 
 export async function generateMetadata(props: { params: { locale: string } }) {
   const t = await getTranslations({

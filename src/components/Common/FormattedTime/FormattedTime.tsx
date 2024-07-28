@@ -2,7 +2,7 @@ import type { DateTimeFormatOptions } from 'next-intl';
 import { useFormatter } from 'next-intl';
 import type { FC } from 'react';
 
-import { DEFAULT_DATE_FORMAT } from '@/helpers/calendar.constants';
+import { DEFAULT_DATE_FORMAT } from '@/next-helpers/calendar.constants';
 
 type FormattedTimeProps = {
   date: string | Date;

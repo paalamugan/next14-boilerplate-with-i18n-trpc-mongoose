@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 // import { NextResponse } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 
-import { siteConfig } from '@/helpers/app.config';
+import { siteConfig } from '@/next-helpers/app.config';
 
 import { verifySessionTokenFromCookies } from './utils/middleware.helper';
 // import { verifySessionTokenFromCookies } from './utils/middleware.helper';

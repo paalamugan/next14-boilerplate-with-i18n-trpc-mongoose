@@ -5,9 +5,9 @@ import { useLocale } from 'next-intl';
 import { type FC } from 'react';
 
 import NavBar from '@/components/Common/NavBar';
-import { availableLocales } from '@/helpers/next.locales';
 import { useSiteNavigationConfig } from '@/hooks';
 import { usePathname, useRouter } from '@/lib/navigation';
+import { availableLocales } from '@/next-helpers/next.locales';
 
 export const WithNavBar: FC = () => {
   const { authNavigationItems } = useSiteNavigationConfig();

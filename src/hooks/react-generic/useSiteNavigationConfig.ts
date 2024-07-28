@@ -2,7 +2,7 @@ import type { MessageKeys, RichTranslationValues } from 'next-intl';
 import { useTranslations } from 'next-intl';
 import type { HTMLAttributeAnchorTarget } from 'react';
 
-import { siteNavigationConfig } from '@/helpers/app.config';
+import { siteNavigationConfig } from '@/next-helpers/app.config';
 import type {
   AuthNavigationKeys,
   FormattedMessage,
