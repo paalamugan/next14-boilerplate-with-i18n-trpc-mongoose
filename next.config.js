@@ -128,6 +128,8 @@ const sentrySettings = {
   project: 'nextjs-boilerplate',
   // Sentry DSN for the Your Website
   dsn: SENTRY_DSN,
+  // Sentry Auth Token for the Your Website
+  authToken: process.env.SENTRY_AUTH_TOKEN,
 };
 
 /** @type {import('@sentry/nextjs/types/config/types').UserSentryOptions} */
