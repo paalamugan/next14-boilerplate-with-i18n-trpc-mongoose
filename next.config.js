@@ -102,6 +102,15 @@ const nextConfig = {
     // Tree-shakes modules from Sentry Bundle
     config.plugins.push(new webpack.DefinePlugin(SENTRY_EXTENSIONS));
 
+    // Ignore Sentry's Critical Dependency from Open Telemetry
+    // (which is genuinely a cause of concern, but there is no work around at the moment)
+    config.ignoreWarnings = [
+      {
+        module: /@opentelemetry\/instrumentation/,
+        message: /Critical dependency/,
+      },
+    ];
+
     return config;
   },
   experimental: {
