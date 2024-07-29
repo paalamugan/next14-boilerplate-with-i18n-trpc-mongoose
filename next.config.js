@@ -15,8 +15,6 @@ import {
   SENTRY_TUNNEL,
 } from './src/next-helpers/sentry.constants.js';
 
-console.log('Vercle env', process.env);
-
 const jiti = createJiti(fileURLToPath(import.meta.url));
 
 jiti('./src/env');
