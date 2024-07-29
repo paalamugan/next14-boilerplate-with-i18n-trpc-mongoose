@@ -18,6 +18,8 @@ export const env = createEnv({
 
     ADMIN_USERNAME: z.string().optional(),
     ADMIN_PASSWORD: z.string().optional(),
+
+    SENTRY_AUTH_TOKEN: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string(),
@@ -36,6 +38,8 @@ export const env = createEnv({
 
     ADMIN_USERNAME: process.env.ADMIN_USERNAME,
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+
+    SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

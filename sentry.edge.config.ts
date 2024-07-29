@@ -5,9 +5,11 @@
 
 import * as Sentry from '@sentry/nextjs';
 
+import { SENTRY_DSN } from './src/next-helpers/sentry.constants';
+
 Sentry.init({
   // FIXME: Add your Sentry DSN
-  // dsn: '___DSN___',
+  dsn: SENTRY_DSN,
 
   // Enable Spotlight in development
   spotlight: process.env.NODE_ENV === 'development',
