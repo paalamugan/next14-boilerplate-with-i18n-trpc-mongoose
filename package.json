@@ -185,8 +185,8 @@
     "user-agent-data-types": "^0.4.2"
   },
   "engines": {
-    "node": ">=20.12.2",
-    "pnpm": ">=9"
+    "node": "^20.12.2",
+    "pnpm": "^9"
   },
   "packageManager": "pnpm@9.6.0",
   "repository": {
