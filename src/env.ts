@@ -29,8 +29,8 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    MONGODB_URI: process.env.MONGODB_URI,
-    REDIS_URL: process.env.REDIS_URL,
+    MONGODB_URI: process.env.NEXT_MONGODB_URI,
+    REDIS_URL: process.env.NEXT_REDIS_URL,
     ANALYZE: process.env.ANALYZE,
 
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
@@ -45,7 +45,7 @@ export const env = createEnv({
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
    * useful for Docker builds.
    */
-  skipValidation: !!process.env.VERCEL_ENV || !!process.env.SKIP_ENV_VALIDATION,
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   /**
    * Makes it so that empty strings are treated as undefined. `SOME_VAR: z.string()` and
    * `SOME_VAR=''` will throw an error.
