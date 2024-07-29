@@ -1,4 +1,4 @@
-/** @type {import('../types').SiteRedirectConfig} */
+/** @type {import('../types').RedirectConfig} */
 const redirects = {
   externals: [
     {

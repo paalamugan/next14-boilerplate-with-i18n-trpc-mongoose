@@ -5,7 +5,7 @@ import { getMe } from '@/server/api/helpers/session';
 
 import { HelloClient } from './HelloClient';
 
-const Hello = async () => {
+export const Hello = async () => {
   const t = await getTranslations('Dashboard');
   const user = await getMe();
 
@@ -25,5 +25,3 @@ const Hello = async () => {
     </>
   );
 };
-
-export { Hello };

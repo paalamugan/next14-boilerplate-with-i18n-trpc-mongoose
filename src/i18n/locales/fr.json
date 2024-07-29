@@ -25,6 +25,16 @@
     "next": "Suivante",
     "previous": "Précédente"
   },
+  "pages": {
+    "profile": {
+      "content": {
+        "title": "Données utilisateur",
+        "clientFetchTitle": "Données récupérées côté client",
+        "serverFetchTitle": "Données récupérées côté serveur",
+        "dashboard_link": "Aller au tableau de bord"
+      }
+    }
+  },
   "common": {
     "sidebar": {
       "title": "Changer de page"

@@ -6,10 +6,11 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC, TRPCError } from '@trpc/server';
+import { initTRPC } from '@trpc/server';
 import type { NextRequest } from 'next/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
+import { fromZodError, ValidationError } from 'zod-validation-error';
 
 import {
   type RateLimitConfig,
@@ -19,6 +20,7 @@ import { type ServerSession } from '@/server/api/routers/auth/service/auth.servi
 import { mongodbConnect } from '@/server/database/mongodb';
 
 import { authService } from './routers/auth/service/auth.service';
+import { getTRPCError } from './utils/trpc-error';
 
 /**
  * Defines your context shape.
@@ -50,6 +52,18 @@ export const createTRPCContext = async (opts: CreateContextOptions) => {
 };
 export type TRPCContext = Awaited<ReturnType<typeof createTRPCContext>>;
 
+const getZodValidationError = (error: unknown) => {
+  if (error instanceof ValidationError) return error;
+
+  if (error instanceof ZodError) {
+    return fromZodError(error, {
+      includePath: true,
+    });
+  }
+
+  return null;
+};
+
 /**
  * 2. INITIALIZATION
  *
@@ -60,11 +74,20 @@ export type TRPCContext = Awaited<ReturnType<typeof createTRPCContext>>;
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
+    const errorCause = error.cause;
+    const zodValidationError = getZodValidationError(errorCause);
+    const mongoServerErrorMessage =
+      errorCause?.name === 'MongoServerError'
+        ? 'An error occurred while processing your request. Please try again later.'
+        : null;
+    const zodValidationErrorMessage = zodValidationError?.message;
     return {
       ...shape,
+      // If you want to hide the error message from the client, you can set it to a generic message
+      message: zodValidationErrorMessage || mongoServerErrorMessage || error.message,
       data: {
         ...shape.data,
-        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+        zodValidationError,
       },
     };
   },
@@ -103,10 +126,7 @@ const enforceUserIsAuthenticated = t.middleware(async opts => {
   const verifiedSessionToken = authService.verifySessionTokenFromCookies(opts.ctx.req.headers);
 
   if (!verifiedSessionToken) {
-    throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: 'You must be logged in to perform this action',
-    });
+    throw getTRPCError('Session token is missing', 'UNAUTHORIZED');
   }
 
   try {
@@ -117,17 +137,11 @@ const enforceUserIsAuthenticated = t.middleware(async opts => {
     });
 
     if (!result.success) {
-      throw new TRPCError({
-        code: 'UNAUTHORIZED',
-        message: 'You must be logged in to perform this action',
-      });
+      throw getTRPCError('Failed to validate session token', 'UNAUTHORIZED');
     }
 
     if (!result.userInfo) {
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to retrieve user info',
-      });
+      throw getTRPCError('Failed to retrieve user info');
     }
 
     return await opts.next({
@@ -140,11 +154,7 @@ const enforceUserIsAuthenticated = t.middleware(async opts => {
       } satisfies ProtectedProcedureOpts,
     });
   } catch (error: unknown) {
-    if (error instanceof TRPCError) throw error;
-    throw new TRPCError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'Failed to verify session token',
-    });
+    throw getTRPCError(error);
   }
 });
 

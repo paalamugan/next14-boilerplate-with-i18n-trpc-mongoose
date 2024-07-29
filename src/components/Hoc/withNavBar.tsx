@@ -5,12 +5,12 @@ import { useLocale } from 'next-intl';
 import { type FC } from 'react';
 
 import NavBar from '@/components/Common/NavBar';
-import { useSiteNavigationConfig } from '@/hooks';
+import { useNavigationConfig } from '@/hooks';
 import { usePathname, useRouter } from '@/lib/navigation';
 import { availableLocales } from '@/next-helpers/next.locales';
 
 export const WithNavBar: FC = () => {
-  const { authNavigationItems } = useSiteNavigationConfig();
+  const { authNavigationItems } = useNavigationConfig();
   const { resolvedTheme, setTheme } = useNextTheme();
   const pathname = usePathname();
   const router = useRouter();
@@ -34,10 +34,11 @@ export const WithNavBar: FC = () => {
         availableLanguages: availableLocales,
         onChange: localeData => onLanguageChange(localeData.code),
       }}
-      navItems={authNavigationItems.map(([, { label, link, target }]) => ({
+      navItems={authNavigationItems.map(([, { label, link, target, icon }]) => ({
         link,
         text: label,
         target,
+        icon,
       }))}
     />
   );

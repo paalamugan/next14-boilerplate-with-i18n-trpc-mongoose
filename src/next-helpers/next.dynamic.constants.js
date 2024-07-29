@@ -1,6 +1,6 @@
-import { siteConfig } from './app.config.js';
 import { BASE_PATH, BASE_URL } from './next.constants.js';
 import { defaultLocale } from './next.locales.js';
+import siteConfig from './site.config.js';
 
 /**
  * This is a list of all static routes or pages from the Website that we do not

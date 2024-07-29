@@ -1,10 +1,13 @@
-/** @type {import('../types/index.js').SiteNavigationConfig} */
+// import { DashboardIcon } from '@paalan/react-icons';
+
+/** @type {import('../types/index.js').NavigationConfig} */
 const navigation = {
   topNavigation: {
     auth: {
       dashboard: {
         link: '/dashboard',
         label: 'auth.navbar.links.dashboard',
+        // icon: <DashboardIcon />,
       },
       profile: {
         link: '/profile',

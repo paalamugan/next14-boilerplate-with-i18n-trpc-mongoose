@@ -4,7 +4,6 @@ import { ZodError } from 'zod';
 import { fromZodError } from 'zod-validation-error';
 
 import { ApiValidationError } from '@/server/errors/api-validation.error';
-
 /**
  * get a TRPCError based on the provided error and code.
  * @param error - The error object or message.
@@ -22,26 +21,24 @@ export const getTRPCError = (
     });
   }
 
-  if (error instanceof TRPCError) return error;
-
   if (error instanceof ApiValidationError) {
     return new TRPCError({
       code: error.statusCode === 1000 ? 'BAD_REQUEST' : 'INTERNAL_SERVER_ERROR',
       message: error.message,
-      cause: {
-        statusCode: error.statusCode,
-        details: error.details,
-      },
+      cause: error,
     });
   }
+
   if (error instanceof ZodError) {
     const validationError = fromZodError(error);
     return new TRPCError({
       code: 'PARSE_ERROR',
       message: validationError.message,
-      cause: validationError.cause,
+      cause: error,
     });
   }
+
+  if (error instanceof TRPCError) return error;
 
   if (error instanceof Error) {
     return new TRPCError({

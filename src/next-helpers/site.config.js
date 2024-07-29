@@ -2,7 +2,7 @@ import { availableLocaleCodes, defaultLocale, localePrefix } from './next.locale
 
 /** @type {import('../types/index.js').SiteConfig} */
 const site = {
-  title: 'Next14 boilerplate with Next Auth and Next Intl',
+  title: 'Next14 boilerplate with Next Intl, TRPC, Mongoose, and Tailwind CSS',
   description:
     'Next14 is a Starter Next.js boilerplate with Mongoose, i18n, TRPC, Tailwind CSS, and Internationalization support.',
   favicon: '/static/favicons/favicon.png',

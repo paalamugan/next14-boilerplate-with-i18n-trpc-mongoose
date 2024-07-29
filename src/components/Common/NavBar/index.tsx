@@ -3,7 +3,7 @@
 import Hamburger from '@heroicons/react/24/solid/Bars3Icon';
 import XMark from '@heroicons/react/24/solid/XMarkIcon';
 import * as Label from '@radix-ui/react-label';
-import type { ComponentProps, FC, HTMLAttributeAnchorTarget } from 'react';
+import type { ComponentProps, FC, HTMLAttributeAnchorTarget, ReactNode } from 'react';
 import { useState } from 'react';
 
 import { SignOutButton } from '@/components/Auth/SignOutButton';
@@ -25,6 +25,7 @@ type NavbarProps = {
     text: FormattedMessage;
     link: string;
     target?: HTMLAttributeAnchorTarget | undefined;
+    icon?: ReactNode;
   }>;
   languages: ComponentProps<typeof LanguageSwitcher>;
   onThemeTogglerClick: () => void;
@@ -37,7 +38,7 @@ const NavBar: FC<NavbarProps> = ({ navItems, languages, onThemeTogglerClick }) =
     <nav className={`${style.container}`}>
       <div className={style.demoIconAndMobileItemsToggler}>
         <Link className={style.demoIconWrapper} href="/" aria-label="Home">
-          My Logo
+          Activpass
         </Link>
 
         <Label.Root
@@ -53,8 +54,8 @@ const NavBar: FC<NavbarProps> = ({ navItems, languages, onThemeTogglerClick }) =
 
       <div className={`${style.main} peer-checked:flex`}>
         <div className={style.navItems}>
-          {navItems.map(({ text, link, target }) => (
-            <NavItem key={link} href={link} target={target}>
+          {navItems.map(({ text, link, target, icon }) => (
+            <NavItem key={link} href={link} target={target} icon={icon}>
               {text}
             </NavItem>
           ))}

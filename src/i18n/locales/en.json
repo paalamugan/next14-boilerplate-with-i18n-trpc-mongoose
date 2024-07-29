@@ -24,6 +24,16 @@
     "next": "Next",
     "previous": "Previous"
   },
+  "pages": {
+    "profile": {
+      "content": {
+        "title": "User Data",
+        "clientFetchTitle": "Data fetched at client side",
+        "serverFetchTitle": "Data fetched at server side",
+        "dashboard_link": "Go to Dashboard"
+      }
+    }
+  },
   "common": {
     "sidebar": {
       "title": "Change Page"

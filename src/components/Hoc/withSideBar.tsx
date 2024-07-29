@@ -1,7 +1,7 @@
 import type { RichTranslationValues } from 'next-intl';
 import type { FC } from 'react';
 
-import { useSiteNavigationConfig } from '@/hooks/server';
+import { useNavigationConfig } from '@/hooks/server';
 import type { AuthNavigationKeys } from '@/types';
 
 import { SideBar } from '../Common/SideBar';
@@ -12,7 +12,7 @@ type WithSidebarProps = {
 };
 
 export const WithSidebar: FC<WithSidebarProps> = ({ navKeys, context }) => {
-  const { getAuthSideNavigation } = useSiteNavigationConfig();
+  const { getAuthSideNavigation } = useNavigationConfig();
 
   const mappedSidebarItems = getAuthSideNavigation(navKeys, context).map(
     ([, { label, items }]) => ({

@@ -1,6 +1,8 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { httpBatchLink, loggerLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import { useMemo } from 'react';
@@ -54,7 +56,10 @@ export const TRPCReactProvider: React.FC<Props> = props => {
 
   return (
     <api.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{props.children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        {props.children}
+        <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+      </QueryClientProvider>
     </api.Provider>
   );
 };

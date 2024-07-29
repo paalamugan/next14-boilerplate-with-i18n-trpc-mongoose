@@ -9,8 +9,8 @@ import type { FC, PropsWithChildren } from 'react';
 
 import BaseLayout from '@/layouts/BaseLayout';
 import { INTER, OPEN_SANS } from '@/lib/next-fonts';
-import { siteConfig } from '@/next-helpers/app.config';
 import { allLocaleCodes, availableLocalesMap, defaultLocale } from '@/next-helpers/next.locales';
+import siteConfig from '@/next-helpers/site.config';
 import { Providers } from '@/providers/providers';
 
 const fontClasses = cn(INTER.variable, OPEN_SANS.variable);

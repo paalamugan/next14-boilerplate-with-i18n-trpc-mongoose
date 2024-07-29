@@ -1,5 +1,5 @@
 import { ArrowUpRightIcon } from '@heroicons/react/24/solid';
-import type { FC, HTMLAttributeAnchorTarget, PropsWithChildren } from 'react';
+import type { FC, HTMLAttributeAnchorTarget, PropsWithChildren, ReactNode } from 'react';
 
 import ActiveLink from '@/components/Common/ActiveLink';
 import { cn } from '@/lib/cn';
@@ -13,6 +13,7 @@ type NavItemProps = {
   type?: NavItemType;
   className?: string;
   target?: HTMLAttributeAnchorTarget | undefined;
+  icon?: ReactNode;
 };
 
 const NavItem: FC<PropsWithChildren<NavItemProps>> = ({
@@ -21,6 +22,7 @@ const NavItem: FC<PropsWithChildren<NavItemProps>> = ({
   children,
   className,
   target,
+  icon,
 }) => (
   <ActiveLink
     href={href}
@@ -29,6 +31,8 @@ const NavItem: FC<PropsWithChildren<NavItemProps>> = ({
     allowSubPath={href.startsWith('/')}
     target={target}
   >
+    {icon && <span className={styles.icon}>{icon}</span>}
+
     <span className={styles.label}>{children}</span>
 
     {((type === 'nav' && href.startsWith('http')) || target === '_blank') && (

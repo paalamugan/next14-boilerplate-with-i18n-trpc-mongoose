@@ -1,8 +1,8 @@
 import type { MessageKeys, RichTranslationValues } from 'next-intl';
 import { useTranslations } from 'next-intl';
-import type { HTMLAttributeAnchorTarget } from 'react';
+import type { HTMLAttributeAnchorTarget, ReactNode } from 'react';
 
-import { siteNavigationConfig } from '@/next-helpers/app.config';
+import navigationConfig from '@/next-helpers/navigation.config';
 import type {
   AuthNavigationKeys,
   FormattedMessage,
@@ -18,6 +18,7 @@ interface MappedNavigationEntry {
   label: FormattedMessage;
   link: string;
   target?: HTMLAttributeAnchorTarget | undefined;
+  icon?: ReactNode;
 }
 
 // Provides Context replacement for variables within the Link. This is also something that is not going
@@ -29,7 +30,7 @@ const replaceLinkWithContext = (link: string, context?: RichTranslationValues) =
     link
   );
 
-const useSiteNavigationConfig = () => {
+const useNavigationConfig = () => {
   const t = useTranslations();
 
   const mapNavigationEntries = (entries: Navigation, context: Context = {}) => {
@@ -39,7 +40,7 @@ const useSiteNavigationConfig = () => {
     ) => t.rich(label, context[key] || {});
 
     return Object.entries(entries).map(
-      ([key, { label, link, items, target }]): [string, MappedNavigationEntry] => [
+      ([key, { label, link, items, target, icon }]): [string, MappedNavigationEntry] => [
         key,
         {
           target,
@@ -48,6 +49,7 @@ const useSiteNavigationConfig = () => {
             : '',
           link: link ? replaceLinkWithContext(link, context[key]) : '',
           items: items ? mapNavigationEntries(items, context) : [],
+          icon,
         },
       ]
     );
@@ -55,7 +57,7 @@ const useSiteNavigationConfig = () => {
 
   const getAuthSideNavigation = (keys: Array<AuthNavigationKeys>, context: Context = {}) => {
     const navigationEntries: Navigation = keys.reduce(
-      (acc, key) => ({ ...acc, [key]: siteNavigationConfig.sideNavigation.auth[key] }),
+      (acc, key) => ({ ...acc, [key]: navigationConfig.sideNavigation.auth[key] }),
       {}
     );
 
@@ -64,15 +66,15 @@ const useSiteNavigationConfig = () => {
 
   const getGuestSideNavigation = (keys: Array<GuestNavigationKeys>, context: Context = {}) => {
     const navigationEntries: Navigation = keys.reduce(
-      (acc, key) => ({ ...acc, [key]: siteNavigationConfig.sideNavigation.root[key] }),
+      (acc, key) => ({ ...acc, [key]: navigationConfig.sideNavigation.root[key] }),
       {}
     );
 
     return mapNavigationEntries(navigationEntries, context);
   };
 
-  const authNavigationItems = mapNavigationEntries(siteNavigationConfig.topNavigation.auth);
-  const guestNavigationItems = mapNavigationEntries(siteNavigationConfig.topNavigation.auth);
+  const authNavigationItems = mapNavigationEntries(navigationConfig.topNavigation.auth);
+  const guestNavigationItems = mapNavigationEntries(navigationConfig.topNavigation.auth);
 
   return {
     getAuthSideNavigation,
@@ -82,4 +84,4 @@ const useSiteNavigationConfig = () => {
   };
 };
 
-export default useSiteNavigationConfig;
+export default useNavigationConfig;

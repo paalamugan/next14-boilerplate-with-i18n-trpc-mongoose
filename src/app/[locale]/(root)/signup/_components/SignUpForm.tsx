@@ -5,6 +5,7 @@ import { Form, type FormItemField, useToast } from '@paalan/react-ui';
 import type { FC } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { UserProviderEnum } from '@/enums/user.enum';
 import { useRouter } from '@/lib/navigation';
 import { api } from '@/trpc/client';
 import {
@@ -51,15 +52,7 @@ export const SignUpForm: FC = () => {
   const toast = useToast();
   const router = useRouter();
 
-  const signUpMutation = api.auth.signUp.useMutation({
-    onSuccess: () => {
-      toast.success('Account created successfully');
-      router.push('/signin');
-    },
-    onError: error => {
-      toast.error(error.message);
-    },
-  });
+  const signUpMutation = api.auth.signUp.useMutation();
 
   const form = useForm<SignUpValidationSchemaType>({
     resolver: zodResolver(signUpValidationSchema),
@@ -68,11 +61,19 @@ export const SignUpForm: FC = () => {
       lastName: '',
       email: '',
       password: '',
+      provider: UserProviderEnum.email,
     },
   });
 
-  const onSubmitHandle = (values: SignUpValidationSchemaType) => {
-    signUpMutation.mutate(values);
+  const onSubmitHandle = async (values: SignUpValidationSchemaType) => {
+    try {
+      await signUpMutation.mutateAsync(values);
+      toast.success('Account created successfully');
+      router.push('/signin');
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      toast.error(errorMessage);
+    }
   };
 
   return (

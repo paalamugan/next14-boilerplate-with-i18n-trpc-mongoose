@@ -5,7 +5,7 @@ export interface Redirect {
   destination: string;
 }
 
-export interface SiteRedirectConfig {
+export interface RedirectConfig {
   externals: Redirect[];
   internals: Redirect[];
   rewrites: {

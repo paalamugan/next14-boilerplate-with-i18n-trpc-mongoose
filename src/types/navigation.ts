@@ -1,4 +1,4 @@
-import type { HTMLAttributeAnchorTarget } from 'react';
+import type { HTMLAttributeAnchorTarget, ReactNode } from 'react';
 
 export interface FooterConfig {
   text: string;
@@ -25,7 +25,8 @@ export interface NavigationEntry {
   label?: string;
   link?: string;
   items?: Record<string, NavigationEntry>;
-  target?: HTMLAttributeAnchorTarget | undefined;
+  target?: HTMLAttributeAnchorTarget;
+  icon?: ReactNode;
 }
 
 export type TopNavigationRecord = {
@@ -35,7 +36,7 @@ export type TopNavigationRecord = {
 
 export type TopNavigationKeys = keyof TopNavigationRecord;
 
-export interface SiteNavigationConfig {
+export interface NavigationConfig {
   topNavigation: TopNavigationRecord;
   sideNavigation: TopNavigationRecord;
 }

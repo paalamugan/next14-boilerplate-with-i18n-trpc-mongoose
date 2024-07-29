@@ -144,7 +144,7 @@ class UserRepository {
 
       const dataBody: Omit<IUserData, 'id' | 'fullName'> = {
         ...data,
-        username: data.email.split('@')[0] || data.firstName,
+        username: data.email.split('@')[0] || data.firstName.toLowerCase(),
         verified: true,
         role: AUTH_ROLES.ADMIN,
       };

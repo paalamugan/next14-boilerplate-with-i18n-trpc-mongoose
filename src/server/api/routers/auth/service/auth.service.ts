@@ -189,17 +189,13 @@ class AuthService {
 
   async signUp(args: SignUpArgs) {
     const { input } = args;
-    try {
-      const newUser = await userRepository.createUser({ data: input });
+    const newUser = await userRepository.createUser({ data: input });
 
-      if (!newUser) {
-        throw getTRPCError('Failed to create user');
-      }
-
-      return newUser.toClientObject();
-    } catch (error: unknown) {
-      throw getTRPCError(error);
+    if (!newUser) {
+      throw getTRPCError('Failed to create user');
     }
+
+    return newUser.toClientObject();
   }
 
   public async signOut(args: SignOutArgs): Promise<void> {
