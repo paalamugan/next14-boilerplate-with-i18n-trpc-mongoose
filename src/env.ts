@@ -8,7 +8,7 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    MONGODB_URI: z.string().url(),
+    MONGODB_URI: z.string(),
     REDIS_URL: z.string(),
     ANALYZE: z
       .enum(['true', 'false'])
