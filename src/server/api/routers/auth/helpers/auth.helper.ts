@@ -1,6 +1,6 @@
 import { userProviderSchema } from '@/validations/auth.validation';
 
-import type { IUserData } from '../../user/model/user.model';
+import type { IUserData } from '../../users/model/user.model';
 import { ADMIN_CREDENTIALS, AUTH_ROLES } from '../constants';
 
 const rootAdminUser: IUserData = {

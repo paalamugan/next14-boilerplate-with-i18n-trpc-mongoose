@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { api } from '@/trpc/client';
 
 export const ClientFetch = () => {
-  const { data, isPending } = api.user.userById.useQuery();
+  const { data, isPending } = api.users.userById.useQuery();
   const t = useTranslations('pages.profile.content');
   return (
     <div className="[&_p]:my-6">

@@ -1,4 +1,4 @@
-import type { IUserSensitiveData } from '@/server/api/routers/user/model/user.model';
+import type { IUserSensitiveData } from '@/server/api/routers/users/model/user.model';
 import type { RouterInputs } from '@/trpc/shared';
 
 export type ServerSession = {

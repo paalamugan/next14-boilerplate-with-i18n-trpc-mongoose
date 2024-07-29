@@ -5,10 +5,14 @@ import { z } from 'zod';
 import { generateRandomToken } from '@/server/api/helpers/common';
 import { type ServerSession } from '@/server/api/routers/auth/service/auth.service.types';
 import {
+  type ChangePasswordParams,
   type CreateUserParams,
+  type ForgotPasswordParams,
   type GetUserByIdOptions,
+  type ResetPasswordParams,
   type UpdateUserParams,
-} from '@/server/api/routers/user/repository/user.repository.types';
+  type VerifyCredentialsParams,
+} from '@/server/api/routers/users/repository/user.repository.types';
 import { redis } from '@/server/database/redis';
 import { Logger } from '@/server/logger/logger';
 
@@ -19,11 +23,11 @@ import { type IUserData, type IUserSchema, UserModel } from '../model/user.model
 class UserRepository {
   private readonly logger = new Logger(UserRepository.name);
 
-  private getUserInfoKey(userId: IUserSchema['id']): string {
+  private getUserInfoKey = (userId: IUserSchema['id']): string => {
     return `user-info:${userId}`;
-  }
+  };
 
-  private async cacheUserInfo(user: ServerSession['user']): Promise<void> {
+  private cacheUserInfo = async (user: ServerSession['user']): Promise<void> => {
     const userKey = this.getUserInfoKey(user.id);
     await redis.set(
       userKey,
@@ -31,20 +35,23 @@ class UserRepository {
       'EX',
       60 * 60 * 24 * 7 // 7 days in seconds
     );
-  }
+  };
 
-  private async getCachedUserInfo(
+  private getCachedUserInfo = async (
     userId: ServerSession['user']['id']
-  ): Promise<ServerSession['user'] | null> {
+  ): Promise<ServerSession['user'] | null> => {
     const userKey = this.getUserInfoKey(userId);
     const cachedUserInfo = await redis.get(userKey);
     return cachedUserInfo !== null ? (JSON.parse(cachedUserInfo) as ServerSession['user']) : null;
-  }
+  };
 
-  public async getUserById<T extends boolean = false>(
+  getUserById = async <T extends boolean = false>(
     id: IUserData['id'],
     options?: GetUserByIdOptions<T>
-  ): Promise<(T extends true ? ServerSession['user'] : IUserData) | null> {
+  ): Promise<(T extends true ? ServerSession['user'] : IUserData) | null> => {
+    const rootUser = getRootAdminUser();
+    if (rootUser.username === id || rootUser.id === id) return rootUser; // Return root user if id is root user
+
     const { includeSensitiveInfo = false, bypassCache = false } = options ?? {};
     if (!bypassCache) {
       const cachedUserInfo = await this.getCachedUserInfo(id);
@@ -75,12 +82,12 @@ class UserRepository {
     }
 
     return userData ?? null;
-  }
+  };
 
-  public async getUserByIdOrThrow<T extends boolean = false>(
+  getUserByIdOrThrow = async <T extends boolean = false>(
     id: IUserSchema['id'],
     options?: GetUserByIdOptions<T>
-  ): Promise<T extends true ? ServerSession['user'] : IUserData> {
+  ): Promise<T extends true ? ServerSession['user'] : IUserData> => {
     const user = await this.getUserById(id, options);
     if (user === null) {
       throw new TRPCError({
@@ -89,9 +96,9 @@ class UserRepository {
       });
     }
     return user;
-  }
+  };
 
-  async verifyCredentials(credentials: { email: string; password: string }) {
+  verifyCredentials = async (credentials: VerifyCredentialsParams) => {
     try {
       const user = await UserModel.authenticate(credentials.email, credentials.password);
       user.set('lastLogin', new Date());
@@ -101,9 +108,9 @@ class UserRepository {
       this.logger.error('Failed to verify credentials', error);
       throw error;
     }
-  }
+  };
 
-  async isUserExists(email: string) {
+  isUserExists = async (email: string) => {
     try {
       if (isRootAdminUser(email)) {
         throw new TRPCError({
@@ -129,16 +136,9 @@ class UserRepository {
       this.logger.error('Failed to check if user exists', error);
       throw error;
     }
-  }
+  };
 
-  async getUser(id: string) {
-    const rootUser = getRootAdminUser();
-    if (rootUser.username === id || rootUser.id === id) return rootUser;
-
-    return this.getUserByIdOrThrow(id);
-  }
-
-  async createUser({ data }: CreateUserParams) {
+  createUser = async ({ data }: CreateUserParams) => {
     try {
       await this.isUserExists(data.email);
 
@@ -155,9 +155,9 @@ class UserRepository {
       this.logger.error('Failed to create user', error);
       throw error;
     }
-  }
+  };
 
-  async updateUser({ userId, data }: UpdateUserParams) {
+  updateUser = async ({ userId, data }: UpdateUserParams) => {
     try {
       const updatedUser = await UserModel.findByIdAndUpdate(userId, data, { new: true }).exec();
       if (!updatedUser) {
@@ -170,11 +170,11 @@ class UserRepository {
       return updatedUser;
     } catch (error) {
       this.logger.error('Failed to update user', error);
-      return error;
+      throw error;
     }
-  }
+  };
 
-  async forgotPassword(email: string) {
+  forgotPassword = async ({ email }: ForgotPasswordParams) => {
     const user = await UserModel.findByEmail(email);
 
     const token = generateRandomToken();
@@ -187,9 +187,9 @@ class UserRepository {
       this.logger.error('Failed to save reset password token', error);
       throw error;
     }
-  }
+  };
 
-  async resetPassword(params: { email: string; passwordToken: string; password: string }) {
+  resetPassword = async (params: ResetPasswordParams) => {
     const { email, passwordToken, password } = params;
 
     await UserModel.findByEmail(email);
@@ -215,19 +215,11 @@ class UserRepository {
       this.logger.error('Failed to save reset password token', error);
       throw error;
     }
-  }
+  };
 
-  async changePassword({
-    userId,
-    oldPassword,
-    newPassword,
-  }: {
-    userId: string;
-    oldPassword: string;
-    newPassword: string;
-  }) {
+  changePassword = async ({ userId, oldPassword, newPassword }: ChangePasswordParams) => {
     return UserModel.changePassword(userId, oldPassword, newPassword);
-  }
+  };
 }
 
 export const userRepository = new UserRepository();

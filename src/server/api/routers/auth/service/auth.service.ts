@@ -2,8 +2,8 @@ import { TRPCError } from '@trpc/server';
 import argon2 from 'argon2';
 
 import { TimeInSeconds } from '@/server/api/enums/time-in-seconds.enum';
-import { type IUserData, UserModel } from '@/server/api/routers/user/model/user.model';
-import { userRepository } from '@/server/api/routers/user/repository/user.repository';
+import { type IUserData, UserModel } from '@/server/api/routers/users/model/user.model';
+import { userRepository } from '@/server/api/routers/users/repository/user.repository';
 import { createSecureCookie, deleteCookie } from '@/server/api/utils/cookie-management';
 import { getTRPCError } from '@/server/api/utils/trpc-error';
 import { redis } from '@/server/database/redis';
@@ -28,37 +28,9 @@ import {
 class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
-  public getSessionTokensKey(userId: IUserData['id']): string {
+  getSessionTokensKey = (userId: IUserData['id']): string => {
     return `${SESSION_TOKENS_PREFIX}${userId}`;
-  }
-
-  public verifySessionTokenFromCookies(headers: Headers) {
-    const sessionToken = headers
-      .get('cookie')
-      ?.split(';')
-      .find(cookie => {
-        return cookie.trim().startsWith(SESSION_TOKEN_COOKIE_KEY);
-      });
-
-    const userId = headers
-      .get('cookie')
-      ?.split(';')
-      .find(cookie => {
-        return cookie.trim().startsWith(USER_ID_COOKIE_KEY);
-      });
-
-    if (!sessionToken || !userId) return null;
-
-    const encodedSessionToken = sessionToken.split('=')[1];
-    const userIdValue = userId.split('=')[1];
-
-    if (!encodedSessionToken || !userIdValue) return null;
-
-    return {
-      encodedSessionToken,
-      userId: userIdValue,
-    };
-  }
+  };
 
   private async addUserSession(args: AddUserSessionArgs): Promise<void> {
     const sessionKey = this.getSessionTokensKey(args.userId);
@@ -97,18 +69,6 @@ class AuthService {
     await redis.zrem(sessionKey, args.sessionToken);
   }
 
-  async checkSessionTokenValidity(userId: IUserData['id'], sessionToken: string): Promise<boolean> {
-    const sessionKey = this.getSessionTokensKey(userId);
-    const score = await redis.zscore(sessionKey, sessionToken);
-    const currentTimestamp = Math.floor(Date.now() / 1000);
-    if (score !== null && parseInt(score, 10) > currentTimestamp) {
-      return true;
-    }
-
-    await redis.zrem(sessionKey, sessionToken);
-    return false;
-  }
-
   private async isTokenAboutToExpire(
     userId: IUserData['id'],
     decodedSessionToken: string
@@ -117,6 +77,12 @@ class AuthService {
     const score = await redis.zscore(sessionKey, decodedSessionToken);
     const currentTimestamp = Math.floor(Date.now() / 1000);
     return score !== null && parseInt(score, 10) - currentTimestamp < TimeInSeconds.OneWeek;
+  }
+
+  private async generateSessionToken(userId: IUserData['id']): Promise<string> {
+    const rawToken = `${userId}-${Date.now()}-${Math.random()}`;
+    const hashedToken = await argon2.hash(rawToken);
+    return hashedToken;
   }
 
   private async renewSessionTokenAndCookies(
@@ -141,13 +107,50 @@ class AuthService {
     return newSessionToken;
   }
 
-  private async generateSessionToken(userId: IUserData['id']): Promise<string> {
-    const rawToken = `${userId}-${Date.now()}-${Math.random()}`;
-    const hashedToken = await argon2.hash(rawToken);
-    return hashedToken;
-  }
+  verifySessionTokenFromCookies = (headers: Headers) => {
+    const sessionToken = headers
+      .get('cookie')
+      ?.split(';')
+      .find(cookie => {
+        return cookie.trim().startsWith(SESSION_TOKEN_COOKIE_KEY);
+      });
 
-  public async signIn(args: SignInArgs): Promise<ServerSession> {
+    const userId = headers
+      .get('cookie')
+      ?.split(';')
+      .find(cookie => {
+        return cookie.trim().startsWith(USER_ID_COOKIE_KEY);
+      });
+
+    if (!sessionToken || !userId) return null;
+
+    const encodedSessionToken = sessionToken.split('=')[1];
+    const userIdValue = userId.split('=')[1];
+
+    if (!encodedSessionToken || !userIdValue) return null;
+
+    return {
+      encodedSessionToken,
+      userId: userIdValue,
+    };
+  };
+
+  checkSessionTokenValidity = async (
+    userId: IUserData['id'],
+    sessionToken: string
+  ): Promise<boolean> => {
+    const sessionKey = this.getSessionTokensKey(userId);
+    const score = await redis.zscore(sessionKey, sessionToken);
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    if (score !== null && parseInt(score, 10) > currentTimestamp) {
+      return true;
+    }
+
+    await redis.zrem(sessionKey, sessionToken);
+    return false;
+  };
+
+  signIn = async (args: SignInArgs): Promise<ServerSession> => {
     const {
       input: { credentials },
       headers,
@@ -185,9 +188,9 @@ class AuthService {
     } catch (error: unknown) {
       throw getTRPCError(error);
     }
-  }
+  };
 
-  async signUp(args: SignUpArgs) {
+  signUp = async (args: SignUpArgs) => {
     const { input } = args;
     const newUser = await userRepository.createUser({ data: input });
 
@@ -196,9 +199,9 @@ class AuthService {
     }
 
     return newUser.toClientObject();
-  }
+  };
 
-  public async signOut(args: SignOutArgs): Promise<void> {
+  signOut = async (args: SignOutArgs): Promise<void> => {
     await this.deleteSessionToken({
       userId: args.session.user.id,
       sessionToken: args.session.sessionToken,
@@ -215,11 +218,11 @@ class AuthService {
       headers: args.headers,
       name: USER_ID_COOKIE_KEY,
     });
-  }
+  };
 
-  public async validateSessionToken(
+  validateSessionToken = async (
     args: ValidateSessionTokenArgs
-  ): Promise<ValidateSessionTokenResult> {
+  ): Promise<ValidateSessionTokenResult> => {
     const decodedSessionToken = decodeURIComponent(args.encodedSessionToken);
     const isSessionTokenValid = await this.checkSessionTokenValidity(
       args.userId,
@@ -244,9 +247,9 @@ class AuthService {
       }),
       sessionToken: finalSessionToken,
     };
-  }
+  };
 
-  public async removeAllSessions(args: SignOutAllSessionsArgs): Promise<void> {
+  removeAllSessions = async (args: SignOutAllSessionsArgs) => {
     const sessionKey = this.getSessionTokensKey(args.userId);
     await redis.del(sessionKey);
 
@@ -259,9 +262,9 @@ class AuthService {
       name: USER_ID_COOKIE_KEY,
       headers: args.headers,
     });
-  }
+  };
 
-  async accountVerify(args: AccountVerifyArgs) {
+  accountVerify = async (args: AccountVerifyArgs) => {
     const { input } = args;
     const user = await UserModel.findOne({ verifyToken: input.token });
     if (!user) {
@@ -274,14 +277,14 @@ class AuthService {
 
     const savedUser = await user.save();
     return savedUser.toClientObject();
-  }
+  };
 
-  async forgotPassword(args: ForgotPasswordArgs) {
+  forgotPassword = async (args: ForgotPasswordArgs) => {
     const { input } = args;
     try {
-      const currentEmail = input.email.toLowerCase().trim();
+      const email = input.email.toLowerCase().trim();
 
-      const userDoc = await userRepository.forgotPassword(currentEmail);
+      const userDoc = await userRepository.forgotPassword({ email });
 
       // Send email for forget password change
       const emailData = {
@@ -298,9 +301,9 @@ class AuthService {
     } catch (error) {
       throw getTRPCError(error);
     }
-  }
+  };
 
-  async resetPassword(args: ResetPasswordArgs) {
+  resetPassword = async (args: ResetPasswordArgs) => {
     const { input } = args;
 
     const userDoc = await userRepository.resetPassword(input);
@@ -316,7 +319,7 @@ class AuthService {
     // email.send('reset-password', { to: emailData.email }, emailData)
 
     return { success: true };
-  }
+  };
 }
 
 export const authService = new AuthService();

@@ -5,7 +5,7 @@ import { authService } from '@/server/api/routers/auth/service/auth.service';
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc';
 import { Logger } from '@/server/logger/logger';
 
-import type { IUserData } from '../user/model/user.model';
+import type { IUserData } from '../users/model/user.model';
 import {
   accountVerifyInputSchema,
   forgotPasswordInputSchema,

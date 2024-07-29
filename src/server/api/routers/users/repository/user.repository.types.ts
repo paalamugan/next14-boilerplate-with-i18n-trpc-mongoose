@@ -11,6 +11,11 @@ export type UpdateUserPhoneNumParams = {
   phoneNumber: string;
 };
 
+export type VerifyCredentialsParams = {
+  email: IUserSchema['email'];
+  password: string;
+};
+
 export type CreateUserParams = {
   data: CreateUserInputSchema;
 };
@@ -18,4 +23,20 @@ export type CreateUserParams = {
 export type UpdateUserParams = {
   userId: IUserSchema['id'];
   data: UpdateUserInputSchema['data'];
+};
+
+export type ForgotPasswordParams = {
+  email: IUserSchema['email'];
+};
+
+export type ResetPasswordParams = {
+  email: string;
+  passwordToken: string;
+  password: string;
+};
+
+export type ChangePasswordParams = {
+  userId: IUserSchema['id'];
+  oldPassword: string;
+  newPassword: string;
 };

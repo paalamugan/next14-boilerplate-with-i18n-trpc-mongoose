@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server';
 
-import { userRepository } from '@/server/api/routers/user/repository/user.repository';
+import { userRepository } from '@/server/api/routers/users/repository/user.repository';
 import { Logger } from '@/server/logger';
 
 import type { CreateUserArgs, GetUserByIdArgs, UpdateUserArgs } from './user.service.types';
@@ -8,7 +8,7 @@ import type { CreateUserArgs, GetUserByIdArgs, UpdateUserArgs } from './user.ser
 class UserService {
   private readonly logger = new Logger(UserService.name);
 
-  async getUserById({ id }: GetUserByIdArgs) {
+  getUserById = async ({ id }: GetUserByIdArgs) => {
     try {
       if (!id) {
         throw new TRPCError({
@@ -25,9 +25,9 @@ class UserService {
         message: 'Failed to get user by id',
       });
     }
-  }
+  };
 
-  async createUser({ input }: CreateUserArgs) {
+  createUser = async ({ input }: CreateUserArgs) => {
     try {
       const user = await userRepository.createUser({ data: input });
       return user;
@@ -38,9 +38,9 @@ class UserService {
         message: 'Failed to create user',
       });
     }
-  }
+  };
 
-  async updateUser({ input }: UpdateUserArgs) {
+  updateUser = async ({ input }: UpdateUserArgs) => {
     const { id, data } = input;
     try {
       const user = await userRepository.updateUser({ userId: id, data });
@@ -52,7 +52,7 @@ class UserService {
         message: 'Failed to update user',
       });
     }
-  }
+  };
 }
 
 export const userService = new UserService();
