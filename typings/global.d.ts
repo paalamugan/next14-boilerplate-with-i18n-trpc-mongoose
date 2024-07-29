@@ -9,4 +9,6 @@ declare module globalThis {
     conn: typeof import('mongoose') | null;
     promise: Promise<typeof import('mongoose')> | null;
   };
+  // eslint-disable-next-line vars-on-top, no-var
+  var redis: InstanceType<(typeof import('ioredis'))['Redis']>;
 }

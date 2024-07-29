@@ -1,12 +1,12 @@
 .navItem {
-  @apply inline-flex items-center gap-2 rounded px-3 py-2;
+  @apply inline-flex items-center gap-2 rounded px-3 py-2 text-white;
 
   .label {
     @apply text-sm font-medium leading-5;
   }
 
   .icon {
-    @apply size-3 text-neutral-500 dark:text-neutral-200;
+    @apply size-4 text-neutral-500 dark:text-neutral-200;
   }
 
   &.nav {

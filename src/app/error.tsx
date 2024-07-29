@@ -1,11 +1,12 @@
 'use client';
 
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
+import { Button } from '@paalan/react-ui';
 import { captureException } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { type FC, useEffect } from 'react';
 
-import Button from '@/components/Common/Button';
+import Link from '@/components/Link';
 import { CenteredLayout } from '@/layouts/CenteredLayout';
 
 type ErrorPageProps = {
@@ -29,22 +30,26 @@ const ErrorPage: FC<ErrorPageProps> = ({ error, reset }) => {
           <p className="mt-3 max-w-sm text-center text-lg">
             {t('layouts.error.internalServerError.description')}
           </p>
-          <Button href="/">
-            {t('layouts.error.backToHome')}
-            <ArrowRightIcon />
-          </Button>
-          <Button
-            href="/"
-            onClick={e => {
-              e.preventDefault();
-              // Attempt to recover by trying to re-render the segment
+          <div className="flex gap-2">
+            <Button as={Link} href="/">
+              {t('layouts.error.backToHome')}
+              <ArrowRightIcon />
+            </Button>
+            <Button
+              as={Link}
+              href="/"
+              variant="outline"
+              onClick={e => {
+                e.preventDefault();
+                // Attempt to recover by trying to re-render the segment
 
-              reset();
-            }}
-          >
-            {t('layouts.error.refresh')}
-            <ArrowRightIcon />
-          </Button>
+                reset();
+              }}
+            >
+              {t('layouts.error.refresh')}
+              <ArrowRightIcon />
+            </Button>
+          </div>
         </main>
       </CenteredLayout>
     </>

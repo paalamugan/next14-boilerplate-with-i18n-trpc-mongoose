@@ -137,7 +137,7 @@ const enforceUserIsAuthenticated = t.middleware(async opts => {
     });
 
     if (!result.success) {
-      throw getTRPCError('Failed to validate session token', 'UNAUTHORIZED');
+      throw getTRPCError('Invalid session token', 'UNAUTHORIZED');
     }
 
     if (!result.userInfo) {

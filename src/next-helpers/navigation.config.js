@@ -1,4 +1,4 @@
-// import { DashboardIcon } from '@paalan/react-icons';
+import { DashboardIcon } from '@paalan/react-icons';
 
 /** @type {import('../types/index.js').NavigationConfig} */
 const navigation = {
@@ -7,7 +7,7 @@ const navigation = {
       dashboard: {
         link: '/dashboard',
         label: 'auth.navbar.links.dashboard',
-        // icon: <DashboardIcon />,
+        icon: <DashboardIcon />,
       },
       profile: {
         link: '/profile',

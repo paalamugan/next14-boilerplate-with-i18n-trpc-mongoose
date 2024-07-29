@@ -31,8 +31,7 @@ const NavItem: FC<PropsWithChildren<NavItemProps>> = ({
     allowSubPath={href.startsWith('/')}
     target={target}
   >
-    {icon && <span className={styles.icon}>{icon}</span>}
-
+    {icon}
     <span className={styles.label}>{children}</span>
 
     {((type === 'nav' && href.startsWith('http')) || target === '_blank') && (
