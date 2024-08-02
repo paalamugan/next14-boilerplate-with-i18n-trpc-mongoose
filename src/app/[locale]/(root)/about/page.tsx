@@ -1,5 +1,5 @@
-import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
+import type { FC } from 'react';
 
 export async function generateMetadata(props: { params: { locale: string } }) {
   const t = await getTranslations({
@@ -13,8 +13,16 @@ export async function generateMetadata(props: { params: { locale: string } }) {
   };
 }
 
-const About = () => {
-  const t = useTranslations('About');
+type AboutProps = {
+  params: {
+    locale: string;
+  };
+};
+const About: FC<AboutProps> = async ({ params }) => {
+  const t = await getTranslations({
+    locale: params.locale,
+    namespace: 'About',
+  });
 
   return <p>{t('about_paragraph')}</p>;
 };

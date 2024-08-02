@@ -71,6 +71,7 @@ const config = {
         'react/jsx-props-no-spreading': 'off', // _app.tsx uses spread operator and also, react-hook-form
         '@typescript-eslint/comma-dangle': 'off', // Avoid conflict rule between Eslint and Prettier
         '@typescript-eslint/consistent-type-imports': 'error', // Ensure `import type` is used when it's necessary
+        '@typescript-eslint/no-explicit-any': 'error', // Avoid using `any` type
         'no-restricted-syntax': ['error', 'ForInStatement', 'LabeledStatement', 'WithStatement'], // Overrides Airbnb configuration and enable no-restricted-syntax
         'import/prefer-default-export': 'off', // Named export is easier to refactor automatically
         'simple-import-sort/imports': 'error', // Import configuration for `eslint-plugin-simple-import-sort`

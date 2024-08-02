@@ -149,7 +149,8 @@ class UserRepository {
         role: AUTH_ROLES.ADMIN,
       };
 
-      const user = await UserModel.create(dataBody);
+      const user = new UserModel(dataBody);
+      await user.save();
       return user;
     } catch (error) {
       this.logger.error('Failed to create user', error);
