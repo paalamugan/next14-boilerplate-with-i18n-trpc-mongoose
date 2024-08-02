@@ -11,7 +11,11 @@ if (!cached) {
 
 export const redis = (() => {
   if (cached) return cached;
-  const instance = new Redis(env.REDIS_URL);
+  const instance = global.redis || new Redis(env.REDIS_URL, {
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
 
   // instance.on('connect', () => {
   //   logger.info('Redis database connected');
