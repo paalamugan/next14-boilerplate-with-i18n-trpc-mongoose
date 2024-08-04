@@ -29,8 +29,8 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    MONGODB_URI: process.env.MONGODB_URI,
-    REDIS_URL: process.env.REDIS_URL,
+    MONGODB_URI: process.env.NEXT_MONGODB_URI,
+    REDIS_URL: process.env.NEXT_REDIS_URL,
     ANALYZE: process.env.ANALYZE,
 
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
