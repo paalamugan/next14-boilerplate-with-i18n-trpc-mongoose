@@ -38,7 +38,7 @@ const NavBar: FC<NavbarProps> = ({ navItems, languages, onThemeTogglerClick }) =
     <nav className={`${style.container}`}>
       <div className={style.demoIconAndMobileItemsToggler}>
         <Link className={style.demoIconWrapper} href="/" aria-label="Home">
-          Activpass
+          My logo
         </Link>
 
         <Label.Root
