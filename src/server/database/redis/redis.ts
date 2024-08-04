@@ -12,12 +12,12 @@ if (!cached) {
 export const redis = (() => {
   if (cached) return cached;
   let options = {};
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === 'production') {
     options = {
       tls: {
         rejectUnauthorized: false,
       },
-    }
+    };
   }
   const instance = new Redis(env.REDIS_URL, options);
 
