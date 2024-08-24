@@ -5,16 +5,7 @@
     "dev": {
       "cache": false,
       "persistent": true,
-      "env": [
-        "NEXT_PUBLIC_VERCEL_ENV",
-        "NEXT_PUBLIC_STATIC_EXPORT",
-        "NEXT_PUBLIC_BASE_URL",
-        "NEXT_PUBLIC_VERCEL_URL",
-        "NEXT_PUBLIC_DIST_URL",
-        "NEXT_PUBLIC_BASE_PATH",
-        "NEXT_PUBLIC_VERCEL_REVALIDATE_TIME",
-        "NEXT_PUBLIC_DATA_URL"
-      ],
+      "env": ["MONGODB_URI", "NEXTAUTH_URL", "REDIS_URL"],
       "inputs": [
         "$TURBO_DEFAULT$",
         ".env.development.local",
@@ -36,30 +27,12 @@
         ".env"
       ],
       "outputs": [".next/**", "!.next/cache/**"],
-      "env": [
-        "NEXT_PUBLIC_VERCEL_ENV",
-        "NEXT_PUBLIC_STATIC_EXPORT",
-        "NEXT_PUBLIC_BASE_URL",
-        "NEXT_PUBLIC_VERCEL_URL",
-        "NEXT_PUBLIC_DIST_URL",
-        "NEXT_PUBLIC_BASE_PATH",
-        "NEXT_PUBLIC_VERCEL_REVALIDATE_TIME",
-        "NEXT_PUBLIC_DATA_URL"
-      ]
+      "env": ["MONGODB_URI", "NEXTAUTH_URL", "REDIS_URL"]
     },
     "start": {
       "cache": false,
       "persistent": true,
-      "env": [
-        "NEXT_PUBLIC_VERCEL_ENV",
-        "NEXT_PUBLIC_STATIC_EXPORT",
-        "NEXT_PUBLIC_BASE_URL",
-        "NEXT_PUBLIC_VERCEL_URL",
-        "NEXT_PUBLIC_DIST_URL",
-        "NEXT_PUBLIC_BASE_PATH",
-        "NEXT_PUBLIC_VERCEL_REVALIDATE_TIME",
-        "NEXT_PUBLIC_DATA_URL"
-      ]
+      "env": ["MONGODB_URI", "NEXTAUTH_URL", "REDIS_URL"]
     },
     "deploy": {
       "inputs": [
@@ -70,15 +43,7 @@
         "*.{md,mdx,json,ts,tsx,js,yml}"
       ],
       "outputs": [".next/**", "!.next/cache/**"],
-      "env": [
-        "NEXT_PUBLIC_VERCEL_ENV",
-        "NEXT_PUBLIC_STATIC_EXPORT",
-        "NEXT_PUBLIC_BASE_URL",
-        "NEXT_PUBLIC_VERCEL_URL",
-        "NEXT_PUBLIC_BASE_PATH",
-        "NEXT_PUBLIC_VERCEL_REVALIDATE_TIME",
-        "NEXT_PUBLIC_DATA_URL"
-      ]
+      "env": ["MONGODB_URI", "NEXTAUTH_URL", "REDIS_URL"]
     },
     "lint:js": {
       "inputs": [

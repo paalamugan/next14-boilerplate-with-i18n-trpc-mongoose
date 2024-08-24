@@ -8,12 +8,12 @@ on:
 
 env:
   MONGODB_URI: mongodb://localhost:27017/nextauth
+  REDIS_URL: redis://localhost:6379
   NEXTAUTH_URL: http://localhost:3000
   NEXT_PUBLIC_APP_URL: http://localhost:3000
   NEXTAUTH_SECRET: yc2t4Jt+9tl0IBPHbpkLymkPGZqIJ4pmPKAkRUSbpuI=
   NEXT_TELEMETRY_DISABLED: 1
   TURBO_TELEMETRY_DISABLED: 1
-  REDIS_URL: redis://localhost:6379
 
 jobs:
   cache-and-install:
