@@ -1,6 +1,6 @@
 const lintStagedConfig = {
   '**/*.{js,mjs,ts,tsx,md,mdx}': [
-    'eslint --fix --no-ignore --cache --max-warnings 0',
+    'eslint --fix --cache --max-warnings 0',
     'prettier --check --write',
   ],
   '**/*.ts?(x)': () => 'npm run type-check',

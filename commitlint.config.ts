@@ -5,7 +5,7 @@ const Configuration: UserConfig = {
   rules: {
     'subject-case': [
       2,
-      'never',
+      'always',
       [
         'lower-case',
         'upper-case',
