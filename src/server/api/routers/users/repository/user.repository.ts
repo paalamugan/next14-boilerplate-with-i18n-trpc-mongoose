@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { DateTime } from 'luxon';
+import { addDays } from 'date-fns';
 import { z } from 'zod';
 
 import { generateRandomToken } from '@/server/api/helpers/common';
@@ -11,7 +11,6 @@ import {
   type GetUserByIdOptions,
   type ResetPasswordParams,
   type UpdateUserParams,
-  type VerifyCredentialsParams,
 } from '@/server/api/routers/users/repository/user.repository.types';
 import { redis } from '@/server/database/redis';
 import { Logger } from '@/server/logger/logger';
@@ -92,22 +91,14 @@ class UserRepository {
     if (user === null) {
       throw new TRPCError({
         code: 'NOT_FOUND',
-        message: 'User not found',
+        message: `User not found with id: ${id}`,
       });
     }
     return user;
   };
 
-  verifyCredentials = async (credentials: VerifyCredentialsParams) => {
-    try {
-      const user = await UserModel.authenticate(credentials.email, credentials.password);
-      user.set('lastLogin', new Date());
-      const savedUser = await user.save();
-      return savedUser;
-    } catch (error) {
-      this.logger.error('Failed to verify credentials', error);
-      throw error;
-    }
+  getByEmail = async (email: IUserSchema['email']) => {
+    return UserModel.findByEmail(email);
   };
 
   isUserExists = async (email: string) => {
@@ -138,6 +129,18 @@ class UserRepository {
     }
   };
 
+  authenticate = async (email: string, password: string) => {
+    try {
+      const user = await UserModel.authenticate(email, password);
+      user.set('lastLogin', new Date());
+      const savedUser = await user.save();
+      return savedUser;
+    } catch (error) {
+      this.logger.error('Failed to authenticate user', error);
+      throw error;
+    }
+  };
+
   createUser = async ({ data }: CreateUserParams) => {
     try {
       await this.isUserExists(data.email);
@@ -146,7 +149,7 @@ class UserRepository {
         ...data,
         username: data.email.split('@')[0] || data.firstName.toLowerCase(),
         verified: true,
-        role: AUTH_ROLES.ADMIN,
+        role: data.role || AUTH_ROLES.USER,
       };
 
       const user = new UserModel(dataBody);
@@ -180,7 +183,7 @@ class UserRepository {
 
     const token = generateRandomToken();
     user.resetPasswordToken = token;
-    user.resetPasswordExpires = DateTime.now().plus({ hours: 24 }).toJSDate();
+    user.resetPasswordExpires = addDays(new Date(), 1);
 
     try {
       return await user.save();

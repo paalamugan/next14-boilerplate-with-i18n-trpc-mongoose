@@ -79,24 +79,24 @@ importers:
       '@trpc/server':
         specifier: 11.0.0-rc.370
         version: 11.0.0-rc.370
-      argon2:
-        specifier: ^0.40.3
-        version: 0.40.3
+      bcryptjs:
+        specifier: ^2.4.3
+        version: 2.4.3
       checkly:
         specifier: ^4.7.0
         version: 4.7.0(@swc/core@1.6.6(@swc/helpers@0.5.5))(@types/node@20.14.9)(typescript@5.5.4)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      date-fns:
+        specifier: ^3.6.0
+        version: 3.6.0
       glob:
         specifier: ^10.4.2
         version: 10.4.2
       ioredis:
         specifier: ^5.4.1
         version: 5.4.1
-      luxon:
-        specifier: ^3.4.4
-        version: 3.4.4
       mongoose:
         specifier: ^8.5.1
         version: 8.5.1
@@ -245,12 +245,12 @@ importers:
       '@total-typescript/ts-reset':
         specifier: ^0.5.1
         version: 0.5.1
+      '@types/bcryptjs':
+        specifier: ^2.4.6
+        version: 2.4.6
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
-      '@types/luxon':
-        specifier: ^3.4.2
-        version: 3.4.2
       '@types/node':
         specifier: ^20.14.9
         version: 20.14.9
@@ -3470,13 +3470,6 @@ packages:
       }
     engines: { node: '>=14' }
 
-  '@phc/format@1.0.0':
-    resolution:
-      {
-        integrity: sha512-m7X9U6BG2+J+R1lSOdCiITLLrxm+cWlNI3HUFA92oLO77ObGNzaKdh8pMLqdZcshtkKuV84olNNXDfMc4FezBQ==,
-      }
-    engines: { node: '>=10' }
-
   '@pkgjs/parseargs@0.11.0':
     resolution:
       {
@@ -5657,6 +5650,12 @@ packages:
         integrity: sha512-r1bzfrm0tomOI8g1SzvCaQHo6Lcv6zu0EA+W2kHrt8dyrHQxGzBBL4kdkzIS+jBMV+EYcMAEAqXqYaLJq5rOZg==,
       }
 
+  '@types/bcryptjs@2.4.6':
+    resolution:
+      {
+        integrity: sha512-9xlo6R2qDs5uixm0bcIqCeMCE6HiQsIyel9KQySStiyqNl2tnj2mP3DX1Nf56MD6KMenNNlBBsy3LJ7gUEQPXQ==,
+      }
+
   '@types/body-parser@1.19.5':
     resolution:
       {
@@ -5961,12 +5960,6 @@ packages:
     resolution:
       {
         integrity: sha512-OpXEVoCKSS3lQqjx9GGGOapBeuW5eUboYHRlHP9urXPX25IKZ6AnP5ZRxtVf63iieUbsHxLn8NQ5Nlftc6yzAA==,
-      }
-
-  '@types/luxon@3.4.2':
-    resolution:
-      {
-        integrity: sha512-TifLZlFudklWlMBfhubvgqTXRzLDI5pCbGa4P8a3wPyUQSW+1xQ5eDsreP9DWHX3tjq1ke96uYG/nwundroWcA==,
       }
 
   '@types/mdast@3.0.15':
@@ -6850,13 +6843,6 @@ packages:
         integrity: sha512-PYjyFOLKQ9y57JvQ6QLo8dAgNqswh8M1RMJYdQduT6xbWSgK36P/Z/v+p888pM69jMMfS8Xd8F6I1kQ/I9HUGg==,
       }
 
-  argon2@0.40.3:
-    resolution:
-      {
-        integrity: sha512-FrSmz4VeM91jwFvvjsQv9GYp6o/kARWoYKjbjDB2U5io1H3e5X67PYGclFDeQff6UXIhUd4aHR3mxCdBbMMuQw==,
-      }
-    engines: { node: '>=16.17.0' }
-
   argparse@1.0.10:
     resolution:
       {
@@ -7205,6 +7191,12 @@ packages:
         integrity: sha512-NF+epuEdnUYVlGuhaxbbq+dvJttwLnGY+YixlXlME5KpQ5W3CnXA5cVTneY3SPbPDRkcjMbifrwmFYcClgOZeg==,
       }
     engines: { node: '>= 0.8' }
+
+  bcryptjs@2.4.3:
+    resolution:
+      {
+        integrity: sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==,
+      }
 
   before-after-hook@3.0.2:
     resolution:
@@ -8627,6 +8619,12 @@ packages:
         integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==,
       }
     engines: { node: '>=0.11' }
+
+  date-fns@3.6.0:
+    resolution:
+      {
+        integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==,
+      }
 
   debounce-fn@4.0.0:
     resolution:
@@ -12808,13 +12806,6 @@ packages:
       }
     engines: { node: '>=12' }
 
-  luxon@3.4.4:
-    resolution:
-      {
-        integrity: sha512-zobTr7akeGHnv7eBOXcRgMeCP6+uyYsczwmeRCauvpvaAltgNyTbLH/+VaEAPUeWBT+1GuNmz4wC/6jtQzbbVA==,
-      }
-    engines: { node: '>=12' }
-
   lz-string@1.5.0:
     resolution:
       {
@@ -13689,13 +13680,6 @@ packages:
         integrity: sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==,
       }
 
-  node-addon-api@8.0.0:
-    resolution:
-      {
-        integrity: sha512-ipO7rsHEBqa9STO5C5T10fj732ml+5kLN1cAG8/jdHd56ldQeGj3Q7+scUS+VHK/qy1zLEwC4wMK5+yM0btPvw==,
-      }
-    engines: { node: ^18 || ^20 || >= 21 }
-
   node-dir@0.1.17:
     resolution:
       {
@@ -13727,13 +13711,6 @@ packages:
     peerDependenciesMeta:
       encoding:
         optional: true
-
-  node-gyp-build@4.8.1:
-    resolution:
-      {
-        integrity: sha512-OSs33Z9yWr148JZcbZd5WiAXhh/n9z8TxQcdMhIOlpN9AhWpLfvVFO73+m77bBABQMaY9XSvIa+qk0jlI7Gcaw==,
-      }
-    hasBin: true
 
   node-int64@0.4.0:
     resolution:
@@ -21234,8 +21211,6 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@phc/format@1.0.0': {}
-
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
@@ -23415,6 +23390,8 @@ snapshots:
     dependencies:
       '@babel/types': 7.24.7
 
+  '@types/bcryptjs@2.4.6': {}
+
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
@@ -23590,8 +23567,6 @@ snapshots:
       '@types/koa': 2.14.0
 
   '@types/lodash@4.17.6': {}
-
-  '@types/luxon@3.4.2': {}
 
   '@types/mdast@3.0.15':
     dependencies:
@@ -24159,12 +24134,6 @@ snapshots:
 
   arg@5.0.2: {}
 
-  argon2@0.40.3:
-    dependencies:
-      '@phc/format': 1.0.0
-      node-addon-api: 8.0.0
-      node-gyp-build: 4.8.1
-
   argparse@1.0.10:
     dependencies:
       sprintf-js: 1.0.3
@@ -24441,6 +24410,8 @@ snapshots:
   basic-auth@2.0.1:
     dependencies:
       safe-buffer: 5.1.2
+
+  bcryptjs@2.4.3: {}
 
   before-after-hook@3.0.2: {}
 
@@ -25379,6 +25350,8 @@ snapshots:
   date-fns@2.30.0:
     dependencies:
       '@babel/runtime': 7.24.7
+
+  date-fns@3.6.0: {}
 
   debounce-fn@4.0.0:
     dependencies:
@@ -28401,8 +28374,6 @@ snapshots:
 
   luxon@3.3.0: {}
 
-  luxon@3.4.4: {}
-
   lz-string@1.5.0: {}
 
   magic-string@0.30.10:
@@ -29062,8 +29033,6 @@ snapshots:
 
   node-abort-controller@3.1.1: {}
 
-  node-addon-api@8.0.0: {}
-
   node-dir@0.1.17:
     dependencies:
       minimatch: 3.1.2
@@ -29080,8 +29049,6 @@ snapshots:
   node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
-
-  node-gyp-build@4.8.1: {}
 
   node-int64@0.4.0: {}
 

@@ -1,18 +1,17 @@
+import bcrypt from 'bcryptjs';
 import mongoose, {
   type FilterQuery,
   type HydratedDocument,
   type InferSchemaType,
   type Model,
-  Types,
 } from 'mongoose';
 
 import { userProviderSchema } from '@/validations/auth.validation';
 
 import { AUTH_ROLES } from '../../auth/constants';
-import { hashPassword, verifyPassword } from '../helper/user.helper';
 
 export interface IUserSchema extends InferSchemaType<typeof UserSchema> {
-  _id: Types.ObjectId;
+  _id: mongoose.Schema.Types.ObjectId;
 
   // Virtuals are not included in the schema type
   id: string;
@@ -25,7 +24,6 @@ export type IUserData = Omit<IUserSensitiveData, 'hash' | 'salt'>;
 // Here, You have to explicity mention the type of methods.
 export interface IUserSchemaMethods {
   /**
-   * 
    * @param password - Password to verify
    * @returns {Promise<boolean>} - True if password is correct, false otherwise
    * */
@@ -45,11 +43,11 @@ export interface IUserDocument extends HydratedDocument<IUserSchema, IUserSchema
 // Here, You have to explicity mention the type of statics.
 export interface IUserModel extends Model<IUserSchema, {}, IUserSchemaMethods> {
   authenticate(email: string, password: string): Promise<IUserDocument>;
-  get(id: string | Types.ObjectId): Promise<IUserDocument>;
+  get(id: string | mongoose.Schema.Types.ObjectId): Promise<IUserDocument>;
   findByEmail(email: string): Promise<IUserDocument>;
   list(filter: FilterQuery<IUserSchema>): Promise<IUserDocument[]>;
   changePassword(
-    id: string | Types.ObjectId,
+    id: string | mongoose.Schema.Types.ObjectId,
     oldPassword: string,
     newPassword: string
   ): Promise<IUserDocument>;
@@ -64,8 +62,8 @@ const schemaOptions = {
 
 const UserSchema = new mongoose.Schema(
   {
-    organization: { type: Types.ObjectId, ref: 'Organization' },
-    ownedBy: { type: Types.ObjectId, ref: 'User' },
+    organization: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization' },
+    ownedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 
     firstName: {
       type: String,
@@ -77,7 +75,6 @@ const UserSchema = new mongoose.Schema(
     },
     username: {
       type: String,
-      unique: true,
       required: true,
     },
     email: {
@@ -149,6 +146,9 @@ UserSchema.virtual('password')
   })
   .set(async function set(password: string) {
     this.rawPassword = password;
+    const salt = bcrypt.genSaltSync(10);
+    this.salt = salt;
+    this.hash = bcrypt.hashSync(password, this.salt);
   });
 
 UserSchema.method('toClientObject', function toClientObject(includeSensitiveData = false) {
@@ -164,17 +164,10 @@ UserSchema.method('toClientObject', function toClientObject(includeSensitiveData
   return rest;
 });
 
-UserSchema.pre('save', async function() {
-  if ((this.isNew || this.isModified('rawPassword')) && this.rawPassword) {
-    const hash = await hashPassword(this.rawPassword);
-    this.hash = hash;
-  }
-});
-
 UserSchema.method('verifyPassword', async function verifyPasswordFn(password: string) {
   const hash = this.get('hash');
   if (!hash) return false;
-  return verifyPassword(hash, password);
+  return bcrypt.compare(password, hash);
 });
 
 UserSchema.static('authenticate', async function authenticate(email: string, password: string) {
@@ -229,6 +222,6 @@ UserSchema.static('changePassword', async function changePassword(id, oldPasswor
   return updatedUser;
 });
 
-export const UserModel =
-  (mongoose.models.User as IUserModel) ||
+export const UserModel: IUserModel =
+  (mongoose.models?.User as unknown as IUserModel) ||
   mongoose.model<IUserSchema, IUserModel>('User', UserSchema);

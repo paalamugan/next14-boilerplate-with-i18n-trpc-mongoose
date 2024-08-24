@@ -1,15 +1,40 @@
 'use client';
 
-import { useToast } from '@paalan/react-ui';
-import { type FC, type FormEventHandler } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Button,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormRoot,
+  Input,
+  useToast,
+} from '@paalan/react-ui';
+import { type FC } from 'react';
+import { useForm } from 'react-hook-form';
 
+import Link from '@/components/Link';
 import { useSession } from '@/stores/session-store';
 import { api } from '@/trpc/client';
+import {
+  signInValidationSchema,
+  type SignInValidationSchemaType,
+} from '@/validations/auth.validation';
 
 type SignInFormProps = {};
 export const SignInForm: FC<SignInFormProps> = _props => {
   const session = useSession();
   const toast = useToast();
+
+  const form = useForm({
+    resolver: zodResolver(signInValidationSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
   const signInMutation = api.auth.signIn.useMutation({
     onSuccess(data) {
@@ -26,61 +51,50 @@ export const SignInForm: FC<SignInFormProps> = _props => {
     },
   });
 
-  const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
-    event.preventDefault();
-    const body = new FormData(event.currentTarget);
-    const email = (body.get('email') || '').toString();
-    const password = (body.get('password') || '').toString();
-
-    signInMutation.mutate({ credentials: { email, password } });
+  const onSubmit = async (credentials: SignInValidationSchemaType) => {
+    signInMutation.mutate({ credentials });
   };
 
-  const isLoading = signInMutation.isPending || session.status === 'loading';
+  const isSubmitting = signInMutation.isPending || session.status === 'loading';
+
   return (
-    <form className="space-y-4" method="POST" onSubmit={onSubmit}>
-      <div>
-        <label htmlFor="email">
-          <div className="block text-sm font-medium leading-6 text-gray-900">Email</div>
-          <div className="mt-2">
-            <input
-              id="email"
-              name="email"
-              type="text"
-              autoComplete="email"
-              required
-              placeholder="Enter Email Address"
-              className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-        </label>
-      </div>
-
-      <div>
-        <label htmlFor="password">
-          <div className="block text-sm font-medium leading-6 text-gray-900">Password</div>
-          <div className="mt-2">
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              placeholder="Enter Password"
-              className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-        </label>
-      </div>
-
-      <div className={isLoading ? 'cursor-not-allowed' : ''}>
-        <button
-          type="submit"
-          disabled={isLoading}
-          className={`flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${isLoading ? 'pointer-events-none disabled:opacity-50' : ''}`}
-        >
-          {isLoading ? 'Signing in...' : 'Sign in'}
-        </button>
-      </div>
-    </form>
+    <FormRoot {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="email">Email</FormLabel>
+              <FormControl>
+                <Input id="email" placeholder="Enter your email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center">
+                <FormLabel htmlFor="password">Password</FormLabel>
+                <Link href="/forgot-password" className="ml-auto inline-block text-sm underline">
+                  Forgot your password?
+                </Link>
+              </div>
+              <FormControl>
+                <Input id="password" placeholder="Enter your password" type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" className="w-full" isLoading={isSubmitting}>
+          {isSubmitting ? 'Signing in...' : 'Sign in'}
+        </Button>
+      </form>
+    </FormRoot>
   );
 };

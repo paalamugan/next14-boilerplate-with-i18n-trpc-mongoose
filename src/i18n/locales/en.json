@@ -115,6 +115,10 @@
     "meta_title": "Sign up",
     "meta_description": "Effortlessly create an account through our intuitive sign-up process."
   },
+  "ForgotPassword": {
+    "meta_title": "Forgot password",
+    "meta_description": "Forgot your password? No worries! Easily reset it through our password recovery process."
+  },
   "Dashboard": {
     "meta_title": "Dashboard",
     "hello_message": "Hello '<strong'>{username}'</strong'>!"

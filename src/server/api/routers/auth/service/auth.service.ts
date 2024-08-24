@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
-import argon2 from 'argon2';
 
 import { TimeInSeconds } from '@/server/api/enums/time-in-seconds.enum';
+import { getHashToken } from '@/server/api/helpers/common';
 import { type IUserData, UserModel } from '@/server/api/routers/users/model/user.model';
 import { userRepository } from '@/server/api/routers/users/repository/user.repository';
 import { createSecureCookie, deleteCookie } from '@/server/api/utils/cookie-management';
@@ -81,7 +81,7 @@ class AuthService {
 
   private async generateSessionToken(userId: IUserData['id']): Promise<string> {
     const rawToken = `${userId}-${Date.now()}-${Math.random()}`;
-    const hashedToken = await argon2.hash(rawToken);
+    const hashedToken = getHashToken(rawToken);
     return hashedToken;
   }
 
@@ -156,7 +156,10 @@ class AuthService {
       headers,
     } = args;
     try {
-      const verifiedUser = await userRepository.verifyCredentials(credentials);
+      const verifiedUser = await userRepository.authenticate(
+        credentials.email,
+        credentials.password
+      );
       const user = verifiedUser.toClientObject();
 
       const expiresIn = TimeInSeconds.TwoWeeks;
