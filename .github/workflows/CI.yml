@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 env:
-  DATABASE_URL: file:next14-boilerplate.db
+  MONGODB_URI: mongodb://localhost:27017/nextauth
   NEXTAUTH_URL: http://localhost:3000
   NEXT_PUBLIC_APP_URL: http://localhost:3000
   NEXTAUTH_SECRET: yc2t4Jt+9tl0IBPHbpkLymkPGZqIJ4pmPKAkRUSbpuI=
@@ -108,8 +108,6 @@ jobs:
 
       - name: Build Next.js
         run: pnpm build
-        env: 
-          REDIS_URL: ${{ env.REDIS_URL }}
 
   test:
     needs: cache-and-install
@@ -170,13 +168,8 @@ jobs:
       #       echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> $GITHUB_ENV
       #     fi
 
-      - name: Migrate database
-        run: pnpm db:migrate
-
       - name: Build Next.js for E2E tests
         run: pnpm build
-        env: 
-          NEXT_REDIS_URL: ${{ env.NEXT_REDIS_URL }}
 
       - if: github.event_name == 'pull_request'
         name: Validate all commits from PR
@@ -190,9 +183,6 @@ jobs:
 
       - name: Run unit tests
         run: pnpm test
-        env: 
-          DATABASE_URL: ${{ env.DATABASE_URL }}
-          NEXTAUTH_URL: ${{ env.NEXTAUTH_URL }}
 
       # - name: Upload coverage reports to Codecov
       #   uses: codecov/codecov-action@v3

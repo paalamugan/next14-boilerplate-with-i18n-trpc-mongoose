@@ -125,7 +125,7 @@
       "outputs": ["storybook-static/**"]
     },
     "test:unit": {
-      "env": ["DATABASE_URL", "NEXTAUTH_URL"],
+      "env": ["MONGODB_URI", "NEXTAUTH_URL", "REDIS_URL"],
       "inputs": [
         "src/**/*.{ts,tsx,js}",
         "src/**/*.css",

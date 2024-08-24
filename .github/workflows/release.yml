@@ -52,9 +52,9 @@ jobs:
       - name: Install dependencies
         run: HUSKY=0 pnpm install --frozen-lockfile
         env:
-          DATABASE_URL: file:next14-boilerplate.db
+          MONGODB_URI: mongodb://localhost:27017
+          REDIS_URL: redis://localhost:6379
           NEXTAUTH_URL: http://localhost:3000
-          NEXT_PUBLIC_APP_URL: http://localhost:3000
 
       - name: Release
         env:

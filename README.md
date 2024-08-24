@@ -98,12 +98,6 @@ nvm install 20.12.2 && nvm use 20.12.2
 pnpm install # or pn install
 ```
 
-then you can run the database migration with:
-
-```shell
-pnpm db:migrate # or pn db:migrate
-```
-
 Then, you can run the project locally in development mode with live reload by executing:
 
 ```shell
@@ -111,41 +105,6 @@ pnpm dev # or pn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your favorite browser to see your project.
-
-### Set up remote database
-
-The project uses DrizzleORM, a type-safe ORM compatible with SQLite, PostgreSQL, and MySQL databases. By default, the project is set up to work seamlessly with libSQL, and for production purposes, it's integrated with [Turso](https://turso.tech). The Next.js Boilerplate also enables a smooth transition to an alternative database provider if your project requires it.
-
-First, you need to create a Turso account at [Turso.tech](https://turso.tech) and install the Turso CLI:
-
-```shell
-brew install tursodatabase/tap/turso
-turso auth signup # Sign up to Turso
-```
-
-Then, create a new database:
-
-```shell
-turso db create next14-boilerplate
-```
-
-Now, you need to update the `DATABASE_URL` in `.env` file with the database URL provided by Turso:
-
-```shell
-turso db show next14-boilerplate --url
-
-# .env
-# DATABASE_URL=libsql://[RANDOM-CHARS]-[DB-NAME]-[ORG-NAME].turso.io
-```
-
-Finally, you also need to create a new environment variable `DATABASE_AUTH_TOKEN` in `.env.local` (not tracked by Git) with the auth token provided by Turso:
-
-```shell
-turso db tokens create next14-boilerplate
-
-# .env.local
-# DATABASE_AUTH_TOKEN=[your-auth-token]
-```
 
 ### Translation (i18n) setup
 
@@ -238,25 +197,9 @@ The App Router folder is compatible with the Edge runtime. You can enable it by 
 // export const runtime = 'edge';
 ```
 
-For your information, the database migration is not compatible with the Edge runtime. So, you need to disable the automatic migration in `src/db/index.ts`:
-
-```tsx
-if (env.DB_MIGRATIONS_ENABLED) {
-  await migrate(db, { migrationsFolder: './migrations' });
-}
-```
-
-After disabling it, you are required to run the migration manually with:
-
-```shell
-pnpm db:migrate # or pn db:migrate
-```
-
 You also require to run the command each time you want to update the database schema.
 
 ### Deploy to production
-
-During the build process, the database migration is automatically executed. So, you don't need to run the migration manually. But, in your environment variable, `DATABASE_URL` and `DATABASE_AUTH_TOKEN` need to be defined.
 
 Then, you can generate a production build with:
 
