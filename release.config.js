@@ -1,7 +1,7 @@
 /**
  * @type {import('semantic-release').GlobalConfig}
  */
-module.exports = {
+const config = {
   branches: ['main'],
   plugins: [
     [
@@ -22,3 +22,5 @@ module.exports = {
     '@semantic-release/github',
   ],
 };
+
+export default config;
